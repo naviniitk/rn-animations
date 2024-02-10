@@ -6,27 +6,27 @@ const FALL_HEIGHT = 200;
 export default function BouncyBall() {
   const translateY = useRef(new Animated.Value(-FALL_HEIGHT)).current;
 
-  const animateBounce = useCallback(
-    () => {
-      return Animated.loop(
-        Animated.sequence([
-          Animated.spring(translateY, {
-            toValue: 0,
-            useNativeDriver: true,
-            overshootClamping: true,
-            bounciness: 20,
-          }),
-          Animated.spring(translateY, {
-            toValue: -FALL_HEIGHT,
-            useNativeDriver: true,
-            bounciness: 1,
-            overshootClamping: true,
-          }),
-        ])
-      );
-    },
-    []
-  );
+  const animateBounce = useCallback(() => {
+    return Animated.loop(
+      Animated.sequence([
+        Animated.spring(translateY, {
+          toValue: 0,
+          useNativeDriver: true,
+          overshootClamping: true,
+          bounciness: 20,
+        }),
+        Animated.spring(translateY, {
+          toValue: -FALL_HEIGHT,
+          useNativeDriver: true,
+          bounciness: 1,
+          overshootClamping: true,
+        }),
+      ]),
+      {
+        iterations: 5,
+      }
+    );
+  }, []);
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
