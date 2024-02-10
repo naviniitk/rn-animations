@@ -1,29 +1,32 @@
-import React, { useEffect, useRef } from "react";
-import { Animated, View } from "react-native";
+import React, { useCallback, useRef } from "react";
+import { Animated, Pressable, Text, View } from "react-native";
 
 const FALL_HEIGHT = 200;
 
 export default function BouncyBall() {
   const translateY = useRef(new Animated.Value(-FALL_HEIGHT)).current;
 
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.spring(translateY, {
-          toValue: 0,
-          useNativeDriver: true,
-          overshootClamping: true,
-          bounciness: 20,
-        }),
-        Animated.spring(translateY, {
-          toValue: -FALL_HEIGHT,
-          useNativeDriver: true,
-          bounciness: 1,
-          overshootClamping: true,
-        }),
-      ])
-    ).start(() => {});
-  }, [translateY]);
+  const animateBounce = useCallback(
+    () => {
+      return Animated.loop(
+        Animated.sequence([
+          Animated.spring(translateY, {
+            toValue: 0,
+            useNativeDriver: true,
+            overshootClamping: true,
+            bounciness: 20,
+          }),
+          Animated.spring(translateY, {
+            toValue: -FALL_HEIGHT,
+            useNativeDriver: true,
+            bounciness: 1,
+            overshootClamping: true,
+          }),
+        ])
+      );
+    },
+    []
+  );
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -49,6 +52,22 @@ export default function BouncyBall() {
           backgroundColor: "#DA0C81",
         }}
       />
+      <Pressable
+        style={{
+          position: "absolute",
+          bottom: 100,
+          padding: 10,
+          borderRadius: 10,
+          borderWidth: 1,
+          borderColor: "#DA0C81",
+          backgroundColor: "#fff",
+        }}
+        onPress={() => {
+          animateBounce().start();
+        }}
+      >
+        <Text style={{ color: "#DA0C81" }}>Bounce</Text>
+      </Pressable>
     </View>
   );
 }
