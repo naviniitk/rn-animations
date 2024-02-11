@@ -55,6 +55,7 @@ export default function SharedButtons() {
                     borderRadius: 10,
                     marginHorizontal: 5,
                   },
+                  { transform: [{ scale }] }
                 ]}
                 activeOpacity={0.76}
               >
