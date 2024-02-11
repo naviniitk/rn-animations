@@ -70,7 +70,7 @@ export default function SharedButtons() {
       >
         {BUTTONS.map((item) => {
           return (
-            <Animated.View key={item} style={{}}>
+            <Animated.View key={item} style={{ transform: [{ scale }] }}>
               <TouchableOpacity
                 style={[
                   {
@@ -79,7 +79,6 @@ export default function SharedButtons() {
                     backgroundColor: "#DA0C81",
                     borderRadius: 10,
                   },
-                  { transform: [{ scale }] },
                 ]}
                 activeOpacity={0.76}
               >
