@@ -1,5 +1,11 @@
 import React, { useCallback, useRef, useState } from "react";
-import { Animated, Dimensions, TouchableOpacity, View } from "react-native";
+import {
+  Animated,
+  Dimensions,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const BUTTONS = [30, 60, 90];
 const { width } = Dimensions.get("window");
@@ -9,6 +15,10 @@ export default function SharedButtons() {
   const scale = animatedWidth.interpolate({
     inputRange: [0, 10, width * 0.6],
     outputRange: [0, 0, 1],
+  });
+  const inputWidth = animatedWidth.interpolate({
+    inputRange: [0, width * 0.6],
+    outputRange: [width * 0.6, 0],
   });
   const [customOpen, setCustomOpen] = useState(false);
 
@@ -30,17 +40,32 @@ export default function SharedButtons() {
     <View
       style={{
         flexDirection: "row",
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
-        // borderWidth: 1,
         flexGrow: 0,
+        paddingHorizontal: 20,
+        width: "100%",
       }}
     >
+      <Animated.View style={[{ width: inputWidth, overflow: "hidden" }]}>
+        <TextInput
+          style={{
+            width: "99%",
+            borderWidth: 1,
+            borderRadius: 8,
+            paddingHorizontal: 10,
+            paddingVertical: 6,
+            borderColor: "#DA0C81",
+          }}
+          placeholder="Custom"
+        />
+      </Animated.View>
       <Animated.View
         style={{
           flexDirection: "row",
           width: animatedWidth,
           overflow: "hidden",
+          gap: 10,
         }}
       >
         {BUTTONS.map((item) => {
@@ -53,9 +78,8 @@ export default function SharedButtons() {
                     paddingVertical: 8,
                     backgroundColor: "#DA0C81",
                     borderRadius: 10,
-                    marginHorizontal: 5,
                   },
-                  { transform: [{ scale }] }
+                  { transform: [{ scale }] },
                 ]}
                 activeOpacity={0.76}
               >
