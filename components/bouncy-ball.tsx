@@ -1,29 +1,36 @@
 import React, { useCallback, useRef } from "react";
-import { Animated, Pressable, Text, View } from "react-native";
+import { Animated, Easing, Pressable, Text, View } from "react-native";
 
 const FALL_HEIGHT = 200;
 
 export default function BouncyBall() {
   const translateY = useRef(new Animated.Value(-FALL_HEIGHT)).current;
+  const height = translateY.interpolate({
+    inputRange: [-FALL_HEIGHT, -FALL_HEIGHT / 2, -50, 0],
+    outputRange: [FALL_HEIGHT, FALL_HEIGHT, FALL_HEIGHT, FALL_HEIGHT * 0.05],
+  });
 
   const animateBounce = useCallback(() => {
     return Animated.loop(
       Animated.sequence([
         Animated.spring(translateY, {
           toValue: 0,
-          useNativeDriver: true,
+          useNativeDriver: false,
           overshootClamping: true,
-          bounciness: 20,
+          friction: 4,
+          tension: 40,
         }),
         Animated.spring(translateY, {
           toValue: -FALL_HEIGHT,
-          useNativeDriver: true,
-          bounciness: 1,
+          useNativeDriver: false,
+          friction: 6,
+          tension: 20,
           overshootClamping: true,
         }),
       ]),
+
       {
-        iterations: 5,
+        iterations: 10,
       }
     );
   }, []);
@@ -36,7 +43,7 @@ export default function BouncyBall() {
             position: "absolute",
             backgroundColor: "#DA0C81",
             width: 200,
-            height: 200,
+            height: height,
             borderRadius: 100,
             bottom: 200,
             transform: [{ translateY }],
@@ -46,7 +53,7 @@ export default function BouncyBall() {
       <View
         style={{
           position: "absolute",
-          bottom: 190,
+          bottom: 200,
           width: 200,
           height: 10,
           backgroundColor: "#DA0C81",
