@@ -1,8 +1,8 @@
 import { ParamListBase } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import React from "react";
-import { Text, View } from "react-native";
-import { BouncyBall, Loading, SharedButtons } from "../../components";
+import { View } from "react-native";
+import { SharedButtons } from "../../components";
 
 export default function Home({
   navigation,
@@ -11,5 +11,5 @@ export default function Home({
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <SharedButtons />
     </View>
-  )
+  );
 }
