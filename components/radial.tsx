@@ -8,20 +8,34 @@ export default function Radial() {
   return (
     <MotiView
       style={{
-        width: width / 2,
-        height: 1,
-        backgroundColor: "#DA0C81",
-        transformOrigin: "100%",
+        width: 0,
+        height: 0,
+        // backgroundColor: "#DA0C81",
+        // transformOrigin: "100%",
+        borderTopWidth: width / 2,
+        borderTopColor: "transparent",
+        borderLeftColor: "transparent",
+        borderLeftWidth: width / 2,
+        borderRightColor: "transparent",
+        borderRightWidth: width / 2,
+        borderBottomColor: "red",
+        borderBottomWidth: width / 2,
+        borderTopLeftRadius: width / 2,
+        borderTopRightRadius: width / 2,
+        borderBottomRightRadius: width / 2,
+        borderBottomLeftRadius: width / 2,
       }}
       from={{
-        transform: [{ translateX: -width / 4 }, { rotateZ: "0deg" }],
+        transform: [{ rotateZ: "0deg" }],
       }}
       animate={{
-        transform: [{ translateX: -width / 4 }, { rotateZ: "180deg" }],
+        transform: [{ rotateZ: "360deg" }],
       }}
       transition={{
         type: "timing",
         duration: 2000,
+        loop: true,
+        repeatReverse: false,
       }}
     />
   );
