@@ -12,12 +12,12 @@ export default function Ripple() {
         scale: 0.5,
       }}
       animate={{
-        scale: 1,
+        scale: 0.8,
       }}
       transition={{
-        type: "timing",
+        type: "spring",
         duration: 1000,
-        loop: true
+        repeat: 5,
       }}
     />
   );
