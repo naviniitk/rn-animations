@@ -18,7 +18,7 @@ export default function Radial() {
         borderLeftWidth: width / 2,
         borderRightColor: "transparent",
         borderRightWidth: width / 2,
-        borderBottomColor: "red",
+        borderBottomColor: "#DA0C81",
         borderBottomWidth: width / 2,
         borderTopLeftRadius: width / 2,
         borderTopRightRadius: width / 2,

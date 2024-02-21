@@ -1,94 +1,140 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useCallback, useMemo } from "react";
 import { Button, Dimensions, View } from "react-native";
 import Animated, {
+  createAnimatedPropAdapter,
   useAnimatedProps,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withSpring,
+  withTiming,
 } from "react-native-reanimated";
 import Svg, { Circle, Path } from "react-native-svg";
+import ExpandingCircle from "./expanding-circle";
 
 const { width, height } = Dimensions.get("window");
 
-const CircularSector = forwardRef(
-  (
-    {
-      startAngle,
-      endAngle,
-      radius,
-      stroke,
-      fill,
-      cx,
-      cy,
-    }: {
-      startAngle: number;
-      endAngle: number;
-      radius: number;
-      stroke: string;
-      fill: string;
-      cx: number;
-      cy: number;
-    },
-    ref
-  ) => {
-    const d = describeArc(cx, cy, radius, startAngle, endAngle);
+interface Coordinate {
+  x: number;
+  y: number;
+}
 
-    return <Path ref={ref} d={d} stroke={stroke} fill={fill} />;
+const RADIAN = Math.PI / 180;
+
+const mathSign = (value: number) => {
+  if (value === 0) {
+    return 0;
   }
-);
+  if (value > 0) {
+    return 1;
+  }
 
-const describeArc = (
-  centerX: number,
-  centerY: number,
-  radius: number,
-  startAngle: number,
-  endAngle: number
-) => {
-  const startRadians = startAngle * (Math.PI / 180);
-  const endRadians = endAngle * (Math.PI / 180);
-
-  // Calculate initial coordinates (adjust for center origin)
-  const startX = centerX + radius * Math.cos(startRadians);
-  const startY = centerY + radius * Math.sin(startRadians);
-
-  // Calculate ending coordinates (adjust for center origin)
-  const endX = centerX + radius * Math.cos(endRadians);
-  const endY = centerY + radius * Math.sin(endRadians);
-
-  // Construct the SVG path string
-  const largeArcFlag = Math.abs(endRadians - startRadians) > Math.PI ? 1 : 0;
-  const d = `M ${centerX},${centerY}
-          L ${startX},${startY}
-          A ${radius},${radius} 0 ${largeArcFlag} 0 ${endX},${endY}
-          L ${centerX},${centerY}
-          Z`;
-
-  return d;
+  return -1;
 };
 
-const AnimatedCircle = Animated.createAnimatedComponent(CircularSector);
+const getDeltaAngle = (startAngle: number, endAngle: number) => {
+  const sign = mathSign(endAngle - startAngle);
+  const deltaAngle = Math.min(Math.abs(endAngle - startAngle), 359.999);
+
+  return sign * deltaAngle;
+};
+
+const polarToCartesian = (
+  cx: number,
+  cy: number,
+  radius: number,
+  angle: number
+): Coordinate => ({
+  x: cx + Math.cos(-RADIAN * angle) * radius,
+  y: cy + Math.sin(-RADIAN * angle) * radius,
+});
+
+const getSectorPath = ({
+  cx,
+  cy,
+  innerRadius,
+  outerRadius,
+  startAngle,
+  endAngle,
+}: {
+  cx: number;
+  cy: number;
+  innerRadius: number;
+  outerRadius: number;
+  startAngle: number;
+  endAngle: number;
+}) => {
+  const angle = getDeltaAngle(startAngle, endAngle);
+
+  // When the angle of sector equals to 360, star point and end point coincide
+  const tempEndAngle = startAngle + angle;
+  const outerStartPoint = polarToCartesian(cx, cy, outerRadius, startAngle);
+  const outerEndPoint = polarToCartesian(cx, cy, outerRadius, tempEndAngle);
+
+  let path = `M ${outerStartPoint.x},${outerStartPoint.y}
+    A ${outerRadius},${outerRadius},0,
+    ${+(Math.abs(angle) > 180)},${+(startAngle > tempEndAngle)},
+    ${outerEndPoint.x},${outerEndPoint.y}
+  `;
+
+  if (innerRadius > 0) {
+    const innerStartPoint = polarToCartesian(cx, cy, innerRadius, startAngle);
+    const innerEndPoint = polarToCartesian(cx, cy, innerRadius, tempEndAngle);
+    path += `L ${innerEndPoint.x},${innerEndPoint.y}
+            A ${innerRadius},${innerRadius},0,
+            ${+(Math.abs(angle) > 180)},${+(startAngle <= tempEndAngle)},
+            ${innerStartPoint.x},${innerStartPoint.y} Z`;
+  } else {
+    path += `L ${cx},${cy} Z`;
+  }
+
+  return path;
+};
+
+const AnimatedPath = Animated.createAnimatedComponent(Path);
+
+const adapter = createAnimatedPropAdapter(
+  (props) => {
+    if (Object.keys(props).includes('d')) {
+      props.d = { type: 0, payload: getSectorPath({
+        cx: width / 2,
+        cy: width / 2,
+        innerRadius: 0,
+        outerRadius: width / 2,
+        startAngle: 0,
+        endAngle: parseInt(props.d as string),
+      }) };
+    }
+  },
+  ['d']
+);
 
 const ExamplesReanimated: React.FC = () => {
   const progress = useSharedValue(0);
+    const d = getSectorPath({
+      cx: width / 2,
+      cy: width / 2,
+      innerRadius: 0,
+      outerRadius: width / 2,
+      startAngle: 0,
+      endAngle: progress.value,
+    });
+  const animatedProps = useAnimatedProps(() => {
+
+    return { d: d };
+  }, [], adapter);
+
+
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      {/* <Animated.View style={[{ width: width, height: 100, backgroundColor: "violet" }, animatedStyles]} /> */}
       <Svg height={width} width={width} viewBox={`0 0 ${width} ${width}`}>
-        <AnimatedCircle
-          cx={width / 2}
-          cy={width / 2}
-          startAngle={270}
-          endAngle={0}
-          radius={width / 2}
-          stroke="#DEAD"
-          fill="#DEADED"
-        />
+        <AnimatedPath animatedProps={animatedProps} fill="#DA0C81" />
       </Svg>
       <Button
         title="Click me"
         onPress={() => {
-          progress.value = withSpring(progress.value + 10);
+          progress.value = withTiming(progress.value + 30);
         }}
       />
     </View>

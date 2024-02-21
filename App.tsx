@@ -1,6 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
-import MainNavigator from "./navigators/main";
+if (process.env.NODE_ENV === "development") {
+  import("./ReactotronConfig").then(() => console.log("Reactotron Configured"));
+}
+
 import { NavigationContainer } from "@react-navigation/native";
+import { StyleSheet } from "react-native";
+import MainNavigator from "./navigators/main";
 
 export default function App() {
   return (
