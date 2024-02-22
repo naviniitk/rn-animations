@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Svg, Ellipse } from "react-native-svg";
 import Animated, {
   createAnimatedPropAdapter,
@@ -26,7 +26,7 @@ const adapter = createAnimatedPropAdapter(
       props.stroke = { type: 0, payload: processColor(props.stroke) };
     }
   },
-  ["fill", "stroke"]
+  ["fill", "stroke"],
 );
 
 export default function EllipseAnimated() {
@@ -63,8 +63,8 @@ export default function EllipseAnimated() {
     };
   });
 
-  React.useEffect(() => {
-    // opacity.value = withRepeat(withTiming(1), -1, true);
+  useEffect(() => {
+    opacity.value = withRepeat(withTiming(1), -1, true);
   }, []);
 
   const ellipseAnimatedProps = useAnimatedProps(
@@ -74,21 +74,26 @@ export default function EllipseAnimated() {
       return {
         cx: coordinates.cx,
         cy: coordinates.cy,
-        rx: coordinates.rx,
-        ry: coordinates.ry,
+        rx: withTiming(isPressed.value ? 80 : coordinates.rx),
+        ry: withTiming(isPressed.value ? 80 : coordinates.ry),
         stroke: "rgb(255,0,0)",
         fill: "yellow",
-        opacity: 1,
+        opacity: opacity.value,
         strokeWidth: 40,
       };
     },
     [],
-    adapter
+    adapter,
   );
 
   return (
     <GestureDetector gesture={gesture}>
-      <AnimatedSvg width={width} height={height} viewBox={`0 0 ${width} ${width}`} style={[animatedStyles]}>
+      <AnimatedSvg
+        width={width}
+        height={height}
+        viewBox={`0 0 ${width} ${width}`}
+        style={[animatedStyles]}
+      >
         <AnimatedEllipse animatedProps={ellipseAnimatedProps} />
       </AnimatedSvg>
     </GestureDetector>
