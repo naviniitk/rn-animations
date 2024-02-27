@@ -1,7 +1,9 @@
 import Home from "./home";
-import Moti from "./moti";
+import ItemDetails from "./item-details";
+import LocationDetails from "./home/location-details";
 
 export {
   Home,
-  Moti,
+  ItemDetails,
+  LocationDetails,
 }

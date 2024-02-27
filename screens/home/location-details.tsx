@@ -1,9 +1,10 @@
 import { ParamListBase } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackScreenProps } from "@react-navigation/stack";
-import React from "react";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
-import { EllipseAnimated } from "../../components";
-import Animated, { FadeInUp } from "react-native-reanimated";
+import { Dimensions, Image, Text, View } from "react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
+
+const { width, height } = Dimensions.get("window");
 
 const LOCATIONS = [
   {
@@ -56,41 +57,34 @@ const LOCATIONS = [
   },
 ];
 
-export default function Home({
-  navigation,
-}: StackScreenProps<StackParamList, "Home">) {
+export default function LocationDetails({
+  route,
+}: StackScreenProps<StackParamList, "LocationDetails">) {
+  const { location } = route.params as { location: (typeof LOCATIONS)[0] };
+
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <View>
-        <Animated.FlatList
-          showsVerticalScrollIndicator={false}
-          data={LOCATIONS}
-          keyExtractor={(item) => item.key}
-          renderItem={({ item, index }) => {
-            return (
-              <TouchableOpacity
-                style={{ flex: 1, margin: 20 }}
-                onPress={() =>
-                  navigation.navigate("LocationDetails", { location: item })
-                }
-              >
-                <Animated.Image
-                  sharedTransitionTag={`${item.key}-image`}
-                  source={{ uri: item.image }}
-                  style={{ width: 200, height: 200 }}
-                  resizeMode="cover"
-                  entering={FadeInUp.delay(300 * index + 300).duration(600)}
-                />
-                <Animated.Text
-                  sharedTransitionTag={`${item.key}-text`}
-                  entering={FadeInUp.delay(300 * index + 300).duration(600)}
-                >
-                  {item.location}
-                </Animated.Text>
-              </TouchableOpacity>
-            );
-          }}
-        />
+    <View style={{ flex: 1 }}>
+      <Animated.Image
+        sharedTransitionTag={`${location.key}-image`}
+        source={{ uri: location.image }}
+        style={{ width, height: width }}
+        resizeMode="cover"
+      />
+      <View style={{ padding: 20 }}>
+        <Animated.Text
+          sharedTransitionTag={`${location.key}-text`}
+          style={{ fontWeight: "800", fontSize: 24 }}
+        >
+          {location.location}
+        </Animated.Text>
+        <Animated.Text entering={FadeInDown.delay(200)}>
+          Santorini is one of the Cyclades islands in the Aegean Sea. It was
+          devastated by a volcanic eruption in the 16th century BC, forever
+          shaping its rugged landscape. The whitewashed, cubiform houses of its
+          2 principal towns, Fira and Oia, cling to cliffs above an underwater
+          caldera (crater). They overlook the sea, small islands to the west and
+          beaches made up of black, red and white lava pebbles.
+        </Animated.Text>
       </View>
     </View>
   );

@@ -3,12 +3,12 @@ import { StackScreenProps } from "@react-navigation/stack";
 import React from "react";
 import { Text, View } from "react-native";
 
-export default function Moti({
+export default function ItemDetails({
   navigation,
-}: StackScreenProps<ParamListBase, "Moti">) {
+}: StackScreenProps<ParamListBase, "ItemDetails">) {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Moti Screen</Text>
+      <Text>Item Details</Text>
     </View>
   );
 }

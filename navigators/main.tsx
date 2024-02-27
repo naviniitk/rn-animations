@@ -1,27 +1,39 @@
-import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { Home, Moti } from "../screens";
+import React from "react";
+import { ItemDetails } from "../screens";
+import ProgressTransitionExample from "../screens/shared-transition";
+import HomeNavigator from "./home-navigtor";
 
 const Drawer = createDrawerNavigator();
 
 export default function MainNavigator() {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      screenOptions={{ headerTransparent: true }}
+      initialRouteName="HomeNavigator"
+      backBehavior={"initialRoute"}
+    >
       <Drawer.Screen
-        name="Home"
+        name="HomeNavigator"
         options={{
-          title: "Home",
-          headerTransparent: true,
+          title: "HomeNavigator",
+          headerTitle: "",
+          headerShown: false,
         }}
-        component={Home}
+        component={HomeNavigator}
       />
       <Drawer.Screen
-        name="Moti"
+        name="ItemDetails"
         options={{
-          title: "Moti",
+          title: "Item Details",
           headerTransparent: true,
         }}
-        component={Moti}
+        component={ItemDetails}
+      />
+      <Drawer.Screen
+        options={{ headerShown: false }}
+        name="ProgressTransitionExample"
+        component={ProgressTransitionExample}
       />
     </Drawer.Navigator>
   );
