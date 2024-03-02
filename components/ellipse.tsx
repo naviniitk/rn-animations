@@ -26,7 +26,7 @@ const adapter = createAnimatedPropAdapter(
       props.stroke = { type: 0, payload: processColor(props.stroke) };
     }
   },
-  ["fill", "stroke"],
+  ["fill", "stroke"]
 );
 
 export default function EllipseAnimated() {
@@ -41,8 +41,14 @@ export default function EllipseAnimated() {
     })
     .onChange((e) => {
       offset.value = {
-        x: e.changeX + offset.value.x,
-        y: e.changeY + offset.value.y,
+        x:
+          e.absoluteX > 100 || e.absoluteX < width - 100
+            ? e.changeX + offset.value.x
+            : offset.value.x,
+        y:
+          e.absoluteY > 160 || e.absoluteY < height - 160
+            ? e.changeY + offset.value.y
+            : offset.value.y,
       };
     })
     .onFinalize((e) => {
@@ -83,7 +89,7 @@ export default function EllipseAnimated() {
       };
     },
     [],
-    adapter,
+    adapter
   );
 
   return (
@@ -91,7 +97,7 @@ export default function EllipseAnimated() {
       <AnimatedSvg
         width={width}
         height={height}
-        viewBox={`0 0 ${width} ${width}`}
+        viewBox={`0 0 ${width} ${height}`}
         style={[animatedStyles]}
       >
         <AnimatedEllipse animatedProps={ellipseAnimatedProps} />

@@ -1,9 +1,10 @@
 import { ParamListBase } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import React from "react";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import { EllipseAnimated } from "../../components";
 import Animated, { FadeInUp } from "react-native-reanimated";
+import { SafeAreaProviderCompat } from "@react-navigation/elements";
 
 const LOCATIONS = [
   {
@@ -60,38 +61,10 @@ export default function Home({
   navigation,
 }: StackScreenProps<StackParamList, "Home">) {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <View>
-        <Animated.FlatList
-          showsVerticalScrollIndicator={false}
-          data={LOCATIONS}
-          keyExtractor={(item) => item.key}
-          renderItem={({ item, index }) => {
-            return (
-              <TouchableOpacity
-                style={{ flex: 1, margin: 20 }}
-                onPress={() =>
-                  navigation.navigate("LocationDetails", { location: item })
-                }
-              >
-                <Animated.Image
-                  sharedTransitionTag={`${item.key}-image`}
-                  source={{ uri: item.image }}
-                  style={{ width: 200, height: 200 }}
-                  resizeMode="cover"
-                  entering={FadeInUp.delay(300 * index + 300).duration(600)}
-                />
-                <Animated.Text
-                  sharedTransitionTag={`${item.key}-text`}
-                  entering={FadeInUp.delay(300 * index + 300).duration(600)}
-                >
-                  {item.location}
-                </Animated.Text>
-              </TouchableOpacity>
-            );
-          }}
-        />
+    <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ borderWidth: 10, borderColor: "red", flex: 1, width: '100%' }}>
+        <EllipseAnimated />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
