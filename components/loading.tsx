@@ -2,7 +2,7 @@ import { MotiView } from "moti";
 import React from "react";
 import { View } from "react-native";
 
-const DATA = [0, 1, 2, 3];
+const DATA = [0, 1, 2, 3, 4];
 
 export default function Loading() {
   return (
@@ -17,14 +17,14 @@ export default function Loading() {
             backgroundColor: "#DA0C81",
           }}
           from={{
-            transform: [{ translateY: 10 }],
+            transform: [{ translateY: 20 }],
           }}
           animate={{
-            transform: [{ translateY: -10 }],
+            transform: [{ translateY: -20 }],
           }}
           transition={{
             type: "timing",
-            duration: 400,
+            duration: 500,
             delay: item * 100,
             repeat: Infinity,
           }}

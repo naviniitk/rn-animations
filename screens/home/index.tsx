@@ -2,7 +2,7 @@ import { ParamListBase } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import React from "react";
 import { FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
-import { EllipseAnimated } from "../../components";
+import { EllipseAnimated, Loading } from "../../components";
 import Animated, { FadeInUp } from "react-native-reanimated";
 import { SafeAreaProviderCompat } from "@react-navigation/elements";
 
@@ -62,9 +62,9 @@ export default function Home({
 }: StackScreenProps<StackParamList, "Home">) {
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <View style={{ borderWidth: 10, borderColor: "red", flex: 1, width: '100%' }}>
-        <EllipseAnimated />
-      </View>
+      {/* <View style={{ borderWidth: 10, borderColor: "red", flex: 1, width: '100%' }}> */}
+        <Loading />
+      {/* </View> */}
     </SafeAreaView>
   );
 }
